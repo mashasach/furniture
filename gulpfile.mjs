@@ -6,12 +6,8 @@ import browserSyncCreator from 'browser-sync';
 import uglify from 'gulp-uglify-es';
 import autoprefixer from 'gulp-autoprefixer';
 import imagemin from 'gulp-imagemin';
-import imageminPngquant from 'imagemin-pngquant';
-import imageminMozjpeg from 'imagemin-mozjpeg';
-import imageminGifsicle from 'imagemin-gifsicle';
 import del from 'del';
 import ghPages from 'gulp-gh-pages';
-
 const { src, dest, watch, parallel, series } = gulp;
 const scss = sass.default(dartSass.default);
 const browserSync = browserSyncCreator.create();
@@ -39,9 +35,16 @@ export function cleanDist() {
 export function images() {
   return src('app/images/**/*')
     .pipe(imagemin([
-      imageminMozjpeg({ quality: 80 }),
-      imageminPngquant({ speed: 4 }),
-      imageminGifsicle({ interlaced: true }),
+
+      imagemin.mozjpeg({
+        quality: 60,
+        progressive: true
+      }),
+
+      imagemin.optipng({
+        optimizationLevel: 5
+      }),
+
       imagemin.svgo({
         plugins: [
           { removeViewBox: false },
