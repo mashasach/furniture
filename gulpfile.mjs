@@ -75,13 +75,12 @@ export function styles() {
       overrideBrowserslist: ['last 10 version'],
       grid: true
     }))
-    .pipe(dest('app/css'))
+    .pipe(dest('dist/css'))
     .pipe(browserSync.stream())
 }
 
 export function build_files() {
   return src([
-    'app/css/style.min.css',
     'app/fonts/**/*',
     'app/js/main.min.js',
     'app/*.html'
@@ -97,8 +96,7 @@ export function watching() {
 
 export const build = series(
   cleanDist,
-  scripts,
-  images,
+  parallel(styles, scripts, images),
   build_files);
 
 export default parallel(styles, browsersync, watching, scripts);
